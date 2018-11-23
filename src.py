@@ -19,11 +19,12 @@ s = Session(webdriver_path=os.path.join(CFG_DIR, "win", "chromedriver.exe") if s
 
 s.driver.get(gg_firebase_login_url)
 
-EMAIL = "test"
-PWD = "test"
+EMAIL = "123"
+PWD = "123"
 PROJECT_NAME = "dukeduke"
 PROJECT_ID = "dukedukedukedukeyang"
 USE_COOKIE = False
+ERROR_CONTINUE = False
 FILE_OUTPUT = os.path.join(BASE_DIR, "result")
 HEADERS = {"Content-Type": "application/javascript;charset=utf-8",
            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -34,7 +35,7 @@ HEADERS = {"Content-Type": "application/javascript;charset=utf-8",
            "X-client-data": "CJS2yQEIpLbJAQjEtskBCKmdygEIqKPKAQjPp8oBGPmlygE="
            }
 
-sites_list = ["test"]
+sites_list = [ "test-92540005", "test-92540006", "test-92540007", "test-92540008"]
 
 s.driver.ensure_element_by_xpath("//input[@id='identifierId']",
                                  state="visible", timeout=20).send_keys(EMAIL)
@@ -44,20 +45,30 @@ s.driver.ensure_element_by_xpath("//input[@name='password']",
                                  state="visible", timeout=20).send_keys(PWD)
 s.driver.ensure_element_by_xpath("//div[@id='passwordNext']/content[1]/span[1]",
                                  state="clickable", timeout=20).ensure_click()
-s.driver.ensure_element_by_xpath("//*[@id='firebase-projects']/div[4]/project-card/div/md-card",
-                                 state="clickable", timeout=80).ensure_click()
+s.driver.ensure_element_by_xpath("//*[@id='firebase-projects']/div[2]/project-card[1]/div/md-card",
+                                 state="clickable", timeout=90).ensure_click()
 s.driver.ensure_element_by_xpath("//*[@id='nav-Develop-tree-content']/fb-navbar-item[4]/a",
                                  state="clickable", timeout=20).ensure_click()
-s.driver.ensure_element_by_xpath("//*[@id='main']/ng-transclude/div/div/div/div[2]/md-single-grid/"
-                                 "sites-overview-card/div/div/div/div/button",
-                                 state="clickable", timeout=20).ensure_click()
+
 for item in sites_list:
+    s.driver.ensure_element_by_xpath("//*[@id='main']/ng-transclude/div/div/div/div[2]/md-single-grid/"
+                                     "sites-overview-card/div/div/div/div/button",
+                                     state="clickable", timeout=20).ensure_click()
     s.driver.ensure_element_by_xpath("//*[@id='hosting_add_site_dialog']/ng-component/fire-dialog/div[2]/"
                                      "form/div/div/div/input", state="visible", timeout=20).send_keys(item)
-    seconds_confirm = raw_input()
-    if seconds_confirm == "yes":
-        s.driver.ensure_element_by_xpath("//*[@id='hosting_add_site_dialog']/ng-component/fire-dialog/div[3]/button[2]",
+    # seconds_confirm = raw_input()
+    # if seconds_confirm == "yes":
+    s.driver.ensure_element_by_xpath("//*[@id='hosting_add_site_dialog']/ng-component/fire-dialog/div[3]/button[2]",
                                          state="clickable", timeout=30).ensure_click()
-
-
-
+    if s.driver.ensure_element_by_xpath("//*[@id='hosting_add_site_dialog']/ng-component/fire-dialog/div[3]/button[2]",
+                                         state="clickable", timeout=30):
+        time.sleep(1)
+        print "submit success for site:", item
+        # if ERROR_CONTINUE:
+        #     s.driver.ensure_element_by_xpath("//*[@id='hosting_add_site_dialog']/ng-component/fire-dialog/div[1]/button",
+        #                                      state="clickable", timeout=30).ensure_click()
+        #     time.sleep(2)
+        #
+        # else:
+        #     break
+    time.sleep(5)
